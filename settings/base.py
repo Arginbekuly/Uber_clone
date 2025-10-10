@@ -1,5 +1,7 @@
-
 from pathlib import Path
+
+# Project modules
+from settings.conf import *  # noqa: F403
 
 """------------------- PATHS -------------------------------------------------------"""
 BASE_DIR = Path(__file__).resolve().parent.parent

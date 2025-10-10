@@ -11,10 +11,6 @@ db.sqlite3
 media/
 staticfiles/
 
-# Virtual environment
-venv/
-env/
-ENV/
 
 # IDE / Editor
 .idea/
@@ -79,4 +75,10 @@ htmlcov/
 
 # Environments
 .env
-.env.*
+.venv
+venv/
+ENV/
+env.bak/
+venv.bak/
+htmlcov/
+reports/
