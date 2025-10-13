@@ -2,7 +2,7 @@
 from django.db import models
 
 #Project modules
-from rides.models import Ride
+from apps.rides.models import Ride
 
 class Payment(models.Model):
     PAYMENT_METHODS = [
@@ -27,7 +27,7 @@ class Payment(models.Model):
         return f"Payment { self.id } for Ride { self.ride.id }: { self.amount } ({ self.status })"
     
 class Transaction(models.Model):
-    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, related_name='transactions'),
+    payment = models.ForeignKey(Payment, on_delete=models.CASCADE, related_name='transactions')
     transaction_type = models.CharField(max_length = 50)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     timestamp = models.DateTimeField(auto_now_add=True)

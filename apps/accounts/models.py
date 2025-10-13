@@ -12,7 +12,7 @@ from django.contrib.auth.models import Group, Permission
 from typing import Any
 from django.contrib.auth.models import AbstractUser
 
-from abstracts.models import AbstractBaseModel
+from apps.abstracts.models import AbstractBaseModel
 from constants.auth_constants import default_role,ROLE_CHOICES,ROLES_LIST
 
 class Account(AbstractUser, AbstractBaseModel):
