@@ -23,9 +23,7 @@ DJANGO_AND_THIRD_PARTY_APPS = [
 ]
 
 PROJECT_APPS = [
-    "accounts.apps.AccountsConfig"
-]
-    'accounts',
+    "accounts.apps.AccountsConfig",
     'payments',
     'rides'
   ]
