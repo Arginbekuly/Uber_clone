@@ -2,7 +2,7 @@
 from django.db import models
 
 #Project modules
-from rides.models import Ride
+from apps.rides.models import Ride
 
 class Payment(models.Model):
     PAYMENT_METHODS = [
