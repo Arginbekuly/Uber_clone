@@ -74,7 +74,7 @@ class Command(BaseCommand):
         Command entry point.
         """
         start_time :datetime = datetime.now()
-        self._generate_accounts()
+        self._generate_accounts(accounts_count=20)
         self.stdout.write(
              "The whole process to generate data took: {} seconds".format(
                 (datetime.now() - start_time).total_seconds()
