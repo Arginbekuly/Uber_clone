@@ -5,7 +5,7 @@ from django.contrib import admin
 from .models import Vehicle, Ride
 @admin.register(Vehicle)
 class VehicleAdmin(admin.ModelAdmin):
-    list_display = ('model', 'licence_plate', 'driver', 'capacity')
+    list_display = ('model', 'license_plate', 'driver', 'capacity')
     search_fields = ('licence_plate','model', 'driver__username')
     
 @admin.register(Ride)

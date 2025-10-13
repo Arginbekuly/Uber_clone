@@ -7,11 +7,11 @@ User = get_user_model()
 class Vehicle(models.Model):
     driver = models.ForeignKey(User,on_delete=models.CASCADE, related_name= "vehicles")
     model = models.CharField(max_length = 100)
-    licence_plate = models.CharField(max_length = 20, unique=True)
+    license_plate = models.CharField(max_length = 20, unique=True)
     capacity =models.PositiveIntegerField(default = 4)
 
     def __str__(self):
-        return f"{ self.model } ({self.licence_plate})"
+        return f"{ self.model } ({self.license_plate})"
     
 
 class Ride(models.Model):
