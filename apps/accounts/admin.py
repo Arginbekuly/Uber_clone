@@ -6,11 +6,18 @@ from apps.accounts.models import Account
 # Register your models here.
 @register(Account)
 class AccountAdmin(ModelAdmin):
-    list_display = ['email','username','first_name','last_name',
-                    'role','is_active'
-                    ]
+    list_display = [
+        'email',
+        'username',
+        'first_name',
+        'last_name',
+        'role',
+        'is_active',
+    ]
 
-    readonly_fields = ['last_login','date_joined','rating', 'created_at', 'updated_at', 'deleted_at']
+    readonly_fields = [
+        'last_login',
+        'date_joined','rating', 'created_at', 'updated_at', 'deleted_at']
     save_on_top = True
     fieldsets = (
         (

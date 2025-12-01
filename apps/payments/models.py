@@ -5,6 +5,17 @@ from django.db import models
 from apps.rides.models import Ride
 
 class Payment(models.Model):
+    """
+    Payment fro a ride.
+
+    ride: the ride this payyment belongs to
+    amount: how much money
+    payment_method: card, cash or wallet
+    status: pending,completed,failed
+    created_at: when payment was created
+    update_at : when payment last updated
+    """
+
     PAYMENT_METHODS = [
         ('card' , 'Card'),
         ('cash', 'Cash'),
@@ -27,6 +38,14 @@ class Payment(models.Model):
         return f"Payment { self.id } for Ride { self.ride.id }: { self.amount } ({ self.status })"
     
 class Transaction(models.Model):
+    """
+    One transaction linked to a payment.
+
+    payment: which payment this transaction belongs to
+    transaction_type : type of trans
+    amount : money amount
+    timestamp: when it happened
+    """
     payment = models.ForeignKey(Payment, on_delete=models.CASCADE, related_name='transactions')
     transaction_type = models.CharField(max_length = 50)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
