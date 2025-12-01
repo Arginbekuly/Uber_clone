@@ -3,6 +3,10 @@ from pathlib import Path
 # Project modules
 from settings.conf import *  # noqa: F403
 
+# python modules
+
+
+
 """------------------- PATHS -------------------------------------------------------"""
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_URLCONF = 'settings.urls'
@@ -20,12 +24,15 @@ DJANGO_AND_THIRD_PARTY_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework_simplejwt',
+    'rest_framework'
 ]
 
 PROJECT_APPS = [
     "apps.accounts.apps.AccountsConfig",
     "apps.payments.apps.PaymentsConfig",
     "apps.rides.apps.RidesConfig",
+    "apps.auths.apps.AuthsConfig"
 ]
 
 INSTALLED_APPS = DJANGO_AND_THIRD_PARTY_APPS + PROJECT_APPS
