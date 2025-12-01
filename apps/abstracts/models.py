@@ -7,6 +7,10 @@ from django.utils import timezone as django_timezone
 class AbstractBaseModel(Model):
     """
     Abstract base model with common fields.
+
+    created_at : when record was created
+    updated_at : when record was updated
+    deleted_at : when record was deleted
     """
     created_at = DateTimeField(
         auto_now_add=True,
@@ -20,8 +24,12 @@ class AbstractBaseModel(Model):
     )
     
     class Meta:
+        """Meta class"""
         abstract = True
     
     def delete(self,*args:tuple[Any, ...], **kwargs:dict[str, Any]) -> None:
+        """
+        
+        """
         self.deleted_at = django_timezone.now()
         self.save(update_fields=['deleted_at'])
