@@ -1,9 +1,11 @@
+#Django imports
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 
+# Custom permission classes for account management
 class IsAdminUser(BasePermission):
     """
-    Разрешает доступ только администраторам.
+    Allows access only to administrators.
     """
 
     def has_permission(self, request, view):
@@ -16,7 +18,7 @@ class IsAdminUser(BasePermission):
 
 class IsOwner(BasePermission):
     """
-    Доступ только если пользователь работает со своим профилем.
+    Access only if the user is working with their profile.
     """
 
     def has_object_permission(self, request, view, obj):
@@ -25,7 +27,7 @@ class IsOwner(BasePermission):
 
 class IsAdminOrOwner(BasePermission):
     """
-    Доступ если пользователь — владелец ресурса или администратор.
+    Access if the user is the resource owner or administrator.
     """
 
     def has_object_permission(self, request, view, obj):
@@ -33,3 +35,16 @@ class IsAdminOrOwner(BasePermission):
             request.user.role == "admin"
             or obj.id == request.user.id
         )
+
+class BanManagementPermission(BasePermission):
+    """
+    Allows only admins to perform certain actions.
+    For example: banning/unbanning users.
+    """
+    allowed_admin_actions = {"ban", "unban"}
+
+    def has_permission(self, request, view):
+        if hasattr(view, 'action'):
+            if view.action in self.allowed_admin_actions:
+                return bool(request.user.is_authenticated and request.user.is_staff)
+        return True
