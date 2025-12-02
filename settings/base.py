@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_URLCONF = 'settings.urls'
 WSGI_APPLICATION = 'settings.wsgi.application'
 ASGI_APPLICATION = 'settings.asgi.application'
-
+AUTH_USER_MODEL = "auths.CustomUser"
 
 
 """-----------------------------------------APPS-------------------------------------"""
@@ -23,9 +23,11 @@ DJANGO_AND_THIRD_PARTY_APPS = [
 ]
 
 PROJECT_APPS = [
-    "apps.accounts.apps.AccountsConfig",
     "apps.payments.apps.PaymentsConfig",
     "apps.rides.apps.RidesConfig",
+    "apps.auths.apps.AuthsConfig",
+    'rest_framework',
+    'rest_framework_simplejwt',
 ]
 
 INSTALLED_APPS = DJANGO_AND_THIRD_PARTY_APPS + PROJECT_APPS

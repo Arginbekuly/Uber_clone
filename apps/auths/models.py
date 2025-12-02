@@ -6,6 +6,7 @@ from django.db.models import (
     EmailField,
     CharField,
     BooleanField,
+    TextChoices,
 )
 from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin,BaseUserManager
 from django.contrib.auth.password_validation import validate_password
@@ -24,6 +25,7 @@ class CustomUserManager(BaseUserManager):
         email: str,
         full_name : str,
         password: str,
+        role: str,
         **kwargs: dict[str, Any], 
         ) -> 'CustomUser':
         """Get user instance."""
@@ -35,7 +37,8 @@ class CustomUserManager(BaseUserManager):
             email = self.normalize_email(email),
             full_name = full_name,
             password = password,
-            **kwargs,
+            role = role,
+            **kwargs,   
         )
         return new_user
 
@@ -44,6 +47,7 @@ class CustomUserManager(BaseUserManager):
         email: str,
         full_name : str,
         password: str,
+        role: str,
         **kwargs: dict[str, Any], 
         ) -> 'CustomUser':
         """Create Custom User. TODO where is this used"""
@@ -51,6 +55,7 @@ class CustomUserManager(BaseUserManager):
             email = email,
             full_name = full_name,
             password = password,
+            role = role,
             **kwargs,
         )
         new_user.set_password(password)
@@ -62,13 +67,25 @@ class CustomUserManager(BaseUserManager):
             email: str,
             full_name : str,
             password: str,
+            role:str,
             **kwargs: dict[str, Any], 
         ) -> 'CustomUser':
         """Create Custom User. TODO where is this used"""
+        
+        kwargs.setdefault("is_staff", True)
+        kwargs.setdefault("is_superuser", True)
+    
+        if kwargs.get("is_staff") is not True:
+            raise ValueError("Superuser must have is_staff=True.")
+        if kwargs.get("is_superuser") is not True:
+            raise ValueError("Superuser must have is_superuser=True.")
+
+        
         new_user: 'CustomUser' = self.__obtain_user_instance(
             email = email,
             full_name = full_name,
             password = password,
+            role=role,
             **kwargs,
         )
         new_user.set_password(password)
@@ -80,6 +97,14 @@ class CustomUser(AbstractBaseUser,AbstractBaseModel,PermissionsMixin):
     EMAIL_MAX_LENGTH = 128
     FULL_NAME_MAX_LENGTH = 128
     PASSWORD_MAX_LENGTH = 254
+    ROLES_MAX_LENGTH = 30
+
+    class Roles(TextChoices):
+        ADMIN = "admin", "Admin"
+        DRIVER = "driver", "Driver"
+        PASSENGER_CLIENT = "passenger_client", "Passenger_Client"
+        OPERATOR = "operator", "Operator"
+        DEFAULT_USER = "default_user", "Default_User"
 
     email = EmailField(
         max_length = EMAIL_MAX_LENGTH,
@@ -92,6 +117,7 @@ class CustomUser(AbstractBaseUser,AbstractBaseModel,PermissionsMixin):
         max_length = FULL_NAME_MAX_LENGTH,
         verbose_name = "Full name",
         help_text = "User`s full name",
+        blank=False,
     )
     password = CharField(
         max_length = PASSWORD_MAX_LENGTH,
@@ -104,6 +130,12 @@ class CustomUser(AbstractBaseUser,AbstractBaseModel,PermissionsMixin):
         verbose_name = "Phone number",
         help_text = "User`s phone number"
     )
+    role = CharField(
+        max_length=ROLES_MAX_LENGTH,
+        choices=Roles.choices,
+        default=Roles.DEFAULT_USER,
+        blank=False,
+    )
     is_staff = BooleanField(
         default = False,
         verbose_name = "Staff status",
@@ -114,7 +146,7 @@ class CustomUser(AbstractBaseUser,AbstractBaseModel,PermissionsMixin):
         verbose_name = "Active status",
         help_text = "True if the user is active and has an access to request to data",
     )
-    REQUIRED_FIELDS = ["full_name"]
+    REQUIRED_FIELDS = ["full_name", "role"]
     USERNAME_FIELD = "email"
     objects = CustomUserManager()
 

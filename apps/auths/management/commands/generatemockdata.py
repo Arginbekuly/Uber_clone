@@ -1,10 +1,13 @@
-from django.contrib.auth.hashers import make_password
-from apps.accounts.models import Account
-from random import choice
-from constants.auth_constants import ROLES_LIST
-from django.core.management.base import BaseCommand
-from typing import Any
+# Python modules
 from datetime import datetime
+from random import choice
+from typing import Any
+
+# Django modules
+from django.core.management.base import BaseCommand
+
+# Application modules
+from apps.auths.models import CustomUser
 
 class Command(BaseCommand):
     help = "Generate data for testing purposes"
@@ -39,29 +42,25 @@ class Command(BaseCommand):
         "aliqua",
     )
     
-    def _generate_accounts(self,accounts_count = 10) -> None:
+    def _generate_users(self,accounts_count = 10) -> None:
         """
         Generates specified number of mock accounts in the database.
         """
         
-        ACCOUNT_PASSWORD = make_password(password = "simplePass123")
-        created_users : list[Account]= []
-        accounts_before : int = Account.objects.count()
+        ACCOUNT_PASSWORD = "simplePass123"
+        accounts_before : int = CustomUser.objects.count()
         for i in range(accounts_count):
-            username : str = f"account {i + 1}"
             email : str = f"account{i + 1}@{choice(self.EMAIL_DOMAINS)}"
-            created_users.append(
-                Account(
-                    username = username,
-                    email = email,
-                    password = ACCOUNT_PASSWORD,
-                    first_name = choice(self.SOME_WORDS).capitalize(),
-                    last_name = choice(self.SOME_WORDS).capitalize(),
-                    role = choice(ROLES_LIST),
-                )
+            full_name = choice(self.SOME_WORDS).capitalize() + ' ' + choice(self.SOME_WORDS).capitalize()
+            role = choice([r.value for r in CustomUser.Roles])
+            CustomUser.objects.create_user(
+                email=email,
+                full_name=full_name, 
+                password=ACCOUNT_PASSWORD, 
+                role=role
             )
-        Account.objects.bulk_create(created_users, ignore_conflicts = True)
-        accounts_after : int = Account.objects.count()
+        
+        accounts_after : int = CustomUser.objects.count()
         
         self.stdout.write(
             self.style.SUCCESS(
@@ -74,7 +73,7 @@ class Command(BaseCommand):
         Command entry point.
         """
         start_time :datetime = datetime.now()
-        self._generate_accounts(accounts_count=20)
+        self._generate_users(accounts_count=100)
         self.stdout.write(
              "The whole process to generate data took: {} seconds".format(
                 (datetime.now() - start_time).total_seconds()
