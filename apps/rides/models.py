@@ -1,10 +1,21 @@
 #Django modules
-from django.db import models
+from django.db.models import (
+    Model,
+    ForeignKey,
+    CharField,
+    PositiveIntegerField,
+    DateTimeField,
+    CASCADE,
+    SET_NULL
+)
 from django.contrib.auth import get_user_model
+
+# Application modules
+from apps.autopark.models import AutoPark
 
 User = get_user_model()
 
-class Vehicle(models.Model):
+class Vehicle(Model):
     """
     Vehicle driven by a driver.
 
@@ -13,16 +24,23 @@ class Vehicle(models.Model):
     license_plate: license number
     capacity: number of passengers
     """
-    driver = models.ForeignKey(User,on_delete=models.CASCADE, related_name= "vehicles")
-    model = models.CharField(max_length = 100)
-    license_plate = models.CharField(max_length = 20, unique=True)
-    capacity =models.PositiveIntegerField(default = 4)
+    driver = ForeignKey(User,on_delete=CASCADE, related_name= "vehicles")
+    model = CharField(max_length = 100)
+    license_plate = CharField(max_length = 20, unique=True)
+    capacity = PositiveIntegerField(default = 4)
+    autopark = ForeignKey(
+        "autopark.AutoPark",
+        on_delete=CASCADE,
+        related_name="vehicles",
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return f"{ self.model } ({self.license_plate})"
     
 
-class Ride(models.Model):
+class Ride(Model):
     """
     Ride request in the system.
 
@@ -41,12 +59,12 @@ class Ride(models.Model):
         ('cancelled', 'Cancelled'),
     ]
 
-    driver = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name = 'rides_as_driver')
-    passenger = models.ForeignKey(User, on_delete=models.SET_NULL, null = True, related_name='rides_as_passenger')
-    start_location = models.CharField(max_length = 100)
-    end_location = models.CharField(max_length = 100)
-    status = models.CharField(max_length = 20, choices= STATUS_CHOISES, default= 'requested')
-    created_at = models.DateTimeField(auto_now_add=True)
+    driver = ForeignKey(User, on_delete=SET_NULL, null=True, related_name = 'rides_as_driver')
+    passenger = ForeignKey(User, on_delete=SET_NULL, null = True, related_name='rides_as_passenger')
+    start_location = CharField(max_length = 100)
+    end_location = CharField(max_length = 100)
+    status = CharField(max_length = 20, choices= STATUS_CHOISES, default= 'requested')
+    created_at = DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Ride { self.id }: { self.start_location } -> { self.end_location } ({ self.status })"

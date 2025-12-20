@@ -26,6 +26,7 @@ PROJECT_APPS = [
     "apps.payments.apps.PaymentsConfig",
     "apps.rides.apps.RidesConfig",
     "apps.auths.apps.AuthsConfig",
+    "apps.autopark.apps.AutoparkConfig",
     'rest_framework',
     'rest_framework_simplejwt',
 ]

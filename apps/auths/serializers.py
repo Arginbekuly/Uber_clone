@@ -1,15 +1,38 @@
+# Python modules
 from typing import (
     Optional,
     Any,
 ) 
 
 # Django REST Framework
-from rest_framework.serializers import Serializer, EmailField, CharField
+from rest_framework.serializers import (
+    ModelSerializer,
+    Serializer, 
+    EmailField, 
+    CharField
+)
 from rest_framework.exceptions import ValidationError
 
 # Project modules
 from apps.auths.models import CustomUser
 
+# Django modules
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+class UserBaseSerializer(ModelSerializer):
+    """
+    Base serializer for CustomUser instances.
+    """
+    
+    class Meta:
+        """
+        Customize the serializer's metadata.
+        """
+        model = CustomUser
+        fields = "__all__"
+    
 
 class UserLoginSerializer(Serializer):
     """
@@ -57,4 +80,47 @@ class UserLoginSerializer(Serializer):
         
         attrs["user"] = user
         return super().validate(attrs)
+    
+class RegisterSerializer(UserBaseSerializer):
+    password = CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ("id", "email", "phone_number", "password", "role", "full_name")
+
+    def validate(self, attrs):
+        email = attrs.get("email")
+        phone = attrs.get("phone_number")
+
+        if not email and not phone:
+            raise ValidationError("Provide email or phone_number")
+
+        return attrs
+
+    def create(self, validated_data):
+        return User.objects.create_user(**validated_data)
+
+class UserMeSerializer(UserBaseSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "email", "phone_number", "first_name", "last_name", "is_active")
         
+class UserListSerializer(UserBaseSerializer):
+    """
+    Serializer for gaining List of all users
+
+    Args:
+        UserBaseSerializer (_type_): _description_
+    """
+    class Meta:
+        """
+        Customize the serializer's metadata.
+        """
+        model = CustomUser
+        fields = (
+            "id",
+            "full_name",
+            "email",
+            "phone_number",
+            "role"
+        )
