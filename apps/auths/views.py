@@ -55,10 +55,10 @@ class CustomUserViewSet(ViewSet):
         serializer : UserLoginSerializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user:CustomUser = serializer._validated_data.pop("user")
-        
+
         refresh_token : RefreshToken = RefreshToken.for_user(user)
         access_token : str = str(refresh_token.access_token)
-        
+
         return DRFResponse(
             data={
                  "id": user.id,
@@ -69,7 +69,7 @@ class CustomUserViewSet(ViewSet):
             },
             status=HTTP_200_OK
         )
-    
+
     @action(
         methods=("POST",),
         detail=False,
@@ -92,11 +92,11 @@ class CustomUserViewSet(ViewSet):
         Returns:
             DRFResponse: _description_
         """
-        
+
         serializer : RegisterSerializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user: CustomUser = serializer.save()
-        
+
         return DRFResponse(
             serializer.validated_data,
             status=HTTP_201_CREATED
@@ -109,11 +109,11 @@ class UserManipulationViewSet(ViewSet):
     Args:
         ViewSet (_type_): _description_
     """
-    
+
     queryset = CustomUser.objects.all()
     permission_classes = (IsAuthenticated, )
-    
-    
+
+
     def list(
         self,
         request:DRFRequest,
@@ -133,17 +133,17 @@ class UserManipulationViewSet(ViewSet):
         all_users : QuerySet[CustomUser] = self.queryset
         if role:
             all_users = all_users.filter(role=role)
-            
+
         serializer : UserListSerializer = UserListSerializer(
             all_users,
             many=True
         )
-        
+
         return DRFResponse(
             data=serializer.data,
             status=HTTP_200_OK
         )
-   
+
     @action(
         methods=["GET",],
         detail=True,
@@ -170,7 +170,7 @@ class UserManipulationViewSet(ViewSet):
             )
 
         self.check_object_permissions(request=request, obj=user)
-            
+
         return DRFResponse(
             data=UserListSerializer(
                 user,

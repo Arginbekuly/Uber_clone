@@ -1,0 +1,6 @@
+[tool.ruff]
+line-length = 79
+
+dummy-variable-rgx = "^_|^unused_"
+
+select = ["E", "W", "F", "B", ]

@@ -22,11 +22,11 @@ class AbstractBaseModel(Model):
         null=True,
         blank=True,
     )
-    
+
     class Meta:
         """Meta class"""
         abstract = True
-    
+
     def delete(self,*args:tuple[Any, ...], **kwargs:dict[str, Any]) -> None:
         """
         

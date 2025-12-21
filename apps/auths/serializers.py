@@ -2,13 +2,13 @@
 from typing import (
     Optional,
     Any,
-) 
+)
 
 # Django REST Framework
 from rest_framework.serializers import (
     ModelSerializer,
-    Serializer, 
-    EmailField, 
+    Serializer,
+    EmailField,
     CharField
 )
 from rest_framework.exceptions import ValidationError
@@ -25,14 +25,14 @@ class UserBaseSerializer(ModelSerializer):
     """
     Base serializer for CustomUser instances.
     """
-    
+
     class Meta:
         """
         Customize the serializer's metadata.
         """
         model = CustomUser
         fields = "__all__"
-    
+
 
 class UserLoginSerializer(Serializer):
     """
@@ -46,18 +46,18 @@ class UserLoginSerializer(Serializer):
         required=True,
         max_length=CustomUser.PASSWORD_MAX_LENGTH,
     )
-    
+
     class Meta:
         """Customization of the Serializer metadata."""
         fields = (
             "email",
             "password",
         )
-        
+
     def validate_email(self, value: str) -> str:
         """Validates the email field."""
         return value.lower()
-    
+
     def validate(self, attrs: dict[str, Any]) -> dict[str, Any]:
         """Validates the input data."""
         email: str = attrs["email"]
@@ -70,17 +70,17 @@ class UserLoginSerializer(Serializer):
                      "email": [f"User with email '{email}' does not exist."]
                 }
             )
-        
+
         if not user.check_password(raw_password=password):
             raise ValidationError(
                 detail={
                     "password": ["Incorrect password"]
                 }
             )
-        
+
         attrs["user"] = user
         return super().validate(attrs)
-    
+
 class RegisterSerializer(UserBaseSerializer):
     password = CharField(write_only=True)
 
@@ -104,7 +104,7 @@ class UserMeSerializer(UserBaseSerializer):
     class Meta:
         model = User
         fields = ("id", "email", "phone_number", "first_name", "last_name", "is_active")
-        
+
 class UserListSerializer(UserBaseSerializer):
     """
     Serializer for gaining List of all users

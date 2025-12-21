@@ -26,19 +26,19 @@ class CustomUserManager(BaseUserManager):
         full_name : str,
         password: str,
         role: str,
-        **kwargs: dict[str, Any], 
+        **kwargs: dict[str, Any],
         ) -> 'CustomUser':
         """Get user instance."""
         if not email:
             raise ValidationError(
-                message = "Email field is required.",code = "email_empty" 
+                message = "Email field is required.",code = "email_empty"
             )
         new_user: 'CustomUser' = self.model(
             email = self.normalize_email(email),
             full_name = full_name,
             password = password,
             role = role,
-            **kwargs,   
+            **kwargs,
         )
         return new_user
 
@@ -48,7 +48,7 @@ class CustomUserManager(BaseUserManager):
         full_name : str,
         password: str,
         role: str,
-        **kwargs: dict[str, Any], 
+        **kwargs: dict[str, Any],
         ) -> 'CustomUser':
         """Create Custom User. TODO where is this used"""
         new_user: 'CustomUser' = self.__obtain_user_instance(
@@ -68,19 +68,19 @@ class CustomUserManager(BaseUserManager):
             full_name : str,
             password: str,
             role:str,
-            **kwargs: dict[str, Any], 
+            **kwargs: dict[str, Any],
         ) -> 'CustomUser':
         """Create Custom User. TODO where is this used"""
-        
+
         kwargs.setdefault("is_staff", True)
         kwargs.setdefault("is_superuser", True)
-    
+
         if kwargs.get("is_staff") is not True:
             raise ValueError("Superuser must have is_staff=True.")
         if kwargs.get("is_superuser") is not True:
             raise ValueError("Superuser must have is_superuser=True.")
 
-        
+
         new_user: 'CustomUser' = self.__obtain_user_instance(
             email = email,
             full_name = full_name,
@@ -91,7 +91,7 @@ class CustomUserManager(BaseUserManager):
         new_user.set_password(password)
         new_user.save(using = self._db)
         return new_user
-    
+
 class CustomUser(AbstractBaseUser,AbstractBaseModel,PermissionsMixin):
     """Custom user model existions Abstract Base Model."""
     EMAIL_MAX_LENGTH = 128

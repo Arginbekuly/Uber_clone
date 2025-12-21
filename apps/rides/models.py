@@ -11,7 +11,6 @@ from django.db.models import (
 from django.contrib.auth import get_user_model
 
 # Application modules
-from apps.autopark.models import AutoPark
 
 User = get_user_model()
 
@@ -38,7 +37,7 @@ class Vehicle(Model):
 
     def __str__(self):
         return f"{ self.model } ({self.license_plate})"
-    
+
 
 class Ride(Model):
     """

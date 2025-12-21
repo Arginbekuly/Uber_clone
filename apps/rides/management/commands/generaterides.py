@@ -27,7 +27,7 @@ class Command(BaseCommand):
             password='pass1234'
         )
 
-        
+
         passenger1 = User.objects.create_user(
             email='passenger1@example.com',
             full_name='Passenger One',

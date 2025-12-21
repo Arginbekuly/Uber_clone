@@ -10,7 +10,7 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework import status
 
 # Project modules
-from .models import Ride, Vehicle 
+from .models import Ride, Vehicle
 from .serializers import RideSerializer, VehicleSerializer
 
 class RideViewSet(ViewSet):
@@ -32,7 +32,7 @@ class RideViewSet(ViewSet):
         rides = Ride.objects.select_related("driver", "passenger").all()
         serializer = RideSerializer(rides, many = True)
         return DRFResponse(serializer.data)
-    
+
     def retrieve(self, request: DRFRequest, pk: int = None) -> DRFResponse:
         """
         Retrieve a single Ride by pk.
@@ -51,7 +51,7 @@ class RideViewSet(ViewSet):
             return DRFResponse({"detail": "Not found."}, status = status.HTTP_404_NOT_FOUND)
         serializer = RideSerializer(ride)
         return DRFResponse(serializer.data)
-    
+
     def create(self, request: DRFRequest) -> DRFResponse:
         """
         Create a new Ride objects
@@ -69,7 +69,7 @@ class RideViewSet(ViewSet):
             serializer.save()
             return DRFResponse(serializer.data, status = status.HTTP_201_CREATED)
         return DRFResponse(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
-    
+
     def update(sel, request: DRFRequest, pk: int = None) -> DRFResponse:
         """
         Update an existing Ride objects.
@@ -80,17 +80,17 @@ class RideViewSet(ViewSet):
         Returns:
             Response: Serialized Ride objects if updated or 40 if validation error.404 if not found 
         """
-        try: 
+        try:
             ride = Ride.objects.get(pk = pk)
         except Ride.DoesNotExist:
             return DRFResponse({"detail": "Not found."}, status = status.HTTP_404_NOT_FOUND)
-        
+
         serializer = RideSerializer(ride, data= request.data)
         if serializer.is_valid():
             serializer.save()
             return DRFResponse(serializer.data)
         return DRFResponse(serializer.erors, status = status.HTTP_400_BAD_REQUEST)
-    
+
     def destroy(sel, request: DRFRequest, pk: int = None) -> DRFResponse:
         """
         Delete a Ride objects by pk.
@@ -102,13 +102,13 @@ class RideViewSet(ViewSet):
         Returns:
             Response: 204 No Content if deleted ,404 if not found 
         """
-        try: 
+        try:
             ride = Ride.objects.get(pk = pk)
         except Ride.DoesNotExist:
             return DRFResponse({"detail": "Not found."}, status = status.HTTP_404_NOT_FOUND)
         ride.delete()
         return DRFResponse(status = status.HTTP_204_NO_CONTENT)
-    
+
 
 class VehicleViewSet(ViewSet):
     """

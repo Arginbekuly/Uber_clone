@@ -1,5 +1,4 @@
 #Django modules
-from django.urls import path
 
 #Django rest framework
 from rest_framework.routers import DefaultRouter
@@ -14,12 +13,12 @@ router : DefaultRouter = DefaultRouter(
 
 router.register(
     prefix="trip",
-    viewset=RideViewSet, 
+    viewset=RideViewSet,
     basename = "ride"
 )
 
 router.register(
-    prefix="vehicles", 
+    prefix="vehicles",
     viewset=VehicleViewSet,
     basename = "vehicle"
 )

@@ -1,12 +1,10 @@
 # Python modules
-from datetime import datetime
 
 # Django modules
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 # Project modules
-from .models import Vehicle, Ride
 
 # Django REST Framework
 from rest_framework.status import HTTP_201_CREATED
@@ -65,7 +63,7 @@ class RideModelTest(TestCase):
             role='passenger',
             password='pass1234',
             phone_number='87771221224'
-        )   
+        )
 
     def test_create_ride_success(self):
         url = "/api/rides/trip"
@@ -78,12 +76,12 @@ class RideModelTest(TestCase):
             "created_at": "2025-12-09T10:21:00+05:00"
         }
         response = self.client.post(url, data, format="json")
-        
+
         if response.status_code != 201:
             print("Response errors:", response.data)
-        
+
         self.assertEqual(response.status_code, HTTP_201_CREATED)
-        
+
         # self.assertEqual(ride.passenger.username, 'passenger1')
 
     # def test_ride_str(self):

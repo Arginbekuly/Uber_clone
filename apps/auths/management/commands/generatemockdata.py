@@ -19,7 +19,7 @@ class Command(BaseCommand):
         "demo.net",
         "mail.com",
     )
-    
+
     SOME_WORDS = (
         "lorem",
         "ipsum",
@@ -41,12 +41,12 @@ class Command(BaseCommand):
         "magna",
         "aliqua",
     )
-    
+
     def _generate_users(self,accounts_count = 10) -> None:
         """
         Generates specified number of mock accounts in the database.
         """
-        
+
         ACCOUNT_PASSWORD = "simplePass123"
         accounts_before : int = CustomUser.objects.count()
         for i in range(accounts_count):
@@ -55,19 +55,19 @@ class Command(BaseCommand):
             role = choice([r.value for r in CustomUser.Roles])
             CustomUser.objects.create_user(
                 email=email,
-                full_name=full_name, 
-                password=ACCOUNT_PASSWORD, 
+                full_name=full_name,
+                password=ACCOUNT_PASSWORD,
                 role=role
             )
-        
+
         accounts_after : int = CustomUser.objects.count()
-        
+
         self.stdout.write(
             self.style.SUCCESS(
                 f"created {accounts_after - accounts_before} accounts."
             )
         )
-        
+
     def handle(self, *args:tuple[Any, ...], **kwargs:dict[str, Any]) -> None:
         """
         Command entry point.
@@ -78,4 +78,4 @@ class Command(BaseCommand):
              "The whole process to generate data took: {} seconds".format(
                 (datetime.now() - start_time).total_seconds()
             )
-        ) 
+        )

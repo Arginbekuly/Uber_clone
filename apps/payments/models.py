@@ -36,7 +36,7 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"Payment { self.id } for Ride { self.ride.id }: { self.amount } ({ self.status })"
-    
+
 class Transaction(models.Model):
     """
     One transaction linked to a payment.
