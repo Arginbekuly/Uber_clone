@@ -29,6 +29,7 @@ PROJECT_APPS = [
     "apps.autopark.apps.AutoparkConfig",
     'rest_framework',
     'rest_framework_simplejwt',
+    'drf_spectacular',
 ]
 
 INSTALLED_APPS = DJANGO_AND_THIRD_PARTY_APPS + PROJECT_APPS
